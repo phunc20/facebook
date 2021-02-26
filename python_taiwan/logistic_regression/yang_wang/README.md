@@ -5,3 +5,9 @@
 
 主要因為我覺得這個東西我應該不能說不會, 所以決定一起來看看問題出在哪裡. 結果是我必須改用另一個 dataset, 因為他原本的 dataset 是 NLP 那邊來的問題 (Stanford
 Mr. Jurafsky 的課程), 我不清楚也沒時間做該 dataset 的前處理. 所以我改用簡單的 iris dataset 跑跑看. 目前還沒有定論;  我做的實驗記錄在 `./*.ipynb` 里.
+
+
+## 一些可能相關的連結
+Papers
+- [Stochastic Gradient Tricks](https://leon.bottou.org/papers/bottou-tricks-2012)
+
