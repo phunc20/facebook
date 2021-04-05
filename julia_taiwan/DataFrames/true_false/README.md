@@ -1,7 +1,7 @@
 # Origin
 The original question asked by user 黃逸華 was as follows.
 
-> 請問一個 DataFrames 的問題（v1.6）
+> ```請問一個 DataFrames 的問題（v1.6）
   using Pkg
   using DataFrames
   df = DataFrame(A=1:10, B=2:2:20)
@@ -24,6 +24,7 @@ The original question asked by user 黃逸華 was as follows.
   另，
   我按照YouTube /stackoverflow 的範例更是錯
   df[df[:Names] .=="A",:]
+  ```
 
 
 And a solution by using **`.&`** was immediately proposed
