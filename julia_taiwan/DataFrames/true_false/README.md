@@ -9,11 +9,11 @@ The original question asked by user 黃逸華 was as follows.
   //條件A
   df[(df[:, :Names] .== "A"), :]
   //條件B
-  df[(df[:, :B] .>4), 🙂
+  df[(df[:, :B] .>4), :]
   //兩個條件組合就報錯
-  df[(df[:, :Names] .== "A") & (df[:, :B] .>4), 🙂
+  df[(df[:, :Names] .== "A") & (df[:, :B] .>4), :]
   ---
-  julia> df[(df[:, :Names] .== "A") & (df[:, :B] .>4), 🙂
+  julia> df[(df[:, :Names] .== "A") & (df[:, :B] .>4), :]
   ERROR: MethodError: no method matching &(::BitVector, ::BitVector)     
   Closest candidates are:
    &(::Any, ::Any, ::Any, ::Any...) at operators.jl:560
@@ -177,35 +177,7 @@ julia> df[(df[:Names] .== "A") .& (df[:B] .> 4), :]
     true
     
     ```
-01. Unlike `pandas`, one seems to have to always specify the columns:
-    ```julia
-    julia> df[(df[:Names] .== "A") .& (df[:B] .> 4)]
-    ERROR: BoundsError: attempt to access data frame with 3 columns
-      at index [false, false, true, false, false, false, true, false, false, true]
-    Stacktrace:
-     [1] getindex at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/other/index.jl:234 [inlined]
-     [2] #manipulate#299 at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/abstractdataframe/selection.jl:550 [inlined]
-     [3] #select#296 at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/abstractdataframe/selection.jl:493 [inlined]
-     [4] getindex at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/dataframe/dataframe.jl:468 [inlined]
-     [5] getindex(::DataFrame, ::BitArray{1}) at ./deprecated.jl:72
-     [6] top-level scope at REPL[38]:1
-    
-    julia> df[(df[:Names] .== "A") .& (df[:B] .> 4), 1]
-    3-element Array{Int64,1}:
-      3
-      7
-     10
-    
-    julia> df[(df[:Names] .== "A") .& (df[:B] .> 4), :]
-    3×3 DataFrame
-    │ Row │ A     │ B     │ Names  │
-    │     │ Int64 │ Int64 │ String │
-    ├─────┼───────┼───────┼────────┤
-    │ 1   │ 3     │ 6     │ A      │
-    │ 2   │ 7     │ 14    │ A      │
-    │ 3   │ 10    │ 20    │ A      │
-    
-    ```
+
 
 ### R1 (on `BitArray` and `Array{Bool}`)
 - [https://stackoverflow.com/questions/29623059/whats-the-difference-between-arraybool-and-bitarray-in-julia-and-how-are-they](https://stackoverflow.com/questions/29623059/whats-the-difference-between-arraybool-and-bitarray-in-julia-and-how-are-they)
@@ -536,38 +508,68 @@ top:
 
 
 ## A Few Other Observations
-```julia
-julia> typeof((df[:Names] .== "A") .& (df[:B] .> 4))
-BitArray{1}
-
-julia> eltype((df[:Names] .== "A") .& (df[:B] .> 4))
-Bool
-
-julia> (df[:Names] .== "A") .& df[:B] .> 4
-10-element BitArray{1}:
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
- 0
-
-julia> df[:Names] .== "A" .& df[:B] .> 4
-ERROR: MethodError: no method matching &(::String, ::Int64)
-Closest candidates are:
-  &(::Any, ::Any, ::Any, ::Any...) at operators.jl:538
-  &(::Missing, ::Integer) at missing.jl:161
-  &(::T, ::T) where T<:Union{Int128, Int16, Int32, Int64, Int8, UInt128, UInt16, UInt32, UInt64, UInt8} at int.jl:308
-  ...
-Stacktrace:
- [1] _broadcast_getindex_evalf at ./broadcast.jl:648 [inlined]
- [2] _broadcast_getindex at ./broadcast.jl:621 [inlined]
- [3] getindex at ./broadcast.jl:575 [inlined]
- [4] copy at ./broadcast.jl:876 [inlined]
- [5] materialize(::Base.Broadcast.Broadcasted{Base.Broadcast.DefaultArrayStyle{1},Nothing,typeof(&),Tuple{Base.RefValue{String},Array{Int64,1}}}) at ./broadcast.jl:837
- [6] top-level scope at REPL[45]:1
-```
+01. Parentheses are not omittable.
+    ```julia
+    julia> typeof((df[:Names] .== "A") .& (df[:B] .> 4))
+    BitArray{1}
+    
+    julia> eltype((df[:Names] .== "A") .& (df[:B] .> 4))
+    Bool
+    
+    julia> (df[:Names] .== "A") .& df[:B] .> 4
+    10-element BitArray{1}:
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+     0
+    
+    julia> df[:Names] .== "A" .& df[:B] .> 4
+    ERROR: MethodError: no method matching &(::String, ::Int64)
+    Closest candidates are:
+      &(::Any, ::Any, ::Any, ::Any...) at operators.jl:538
+      &(::Missing, ::Integer) at missing.jl:161
+      &(::T, ::T) where T<:Union{Int128, Int16, Int32, Int64, Int8, UInt128, UInt16, UInt32, UInt64, UInt8} at int.jl:308
+      ...
+    Stacktrace:
+     [1] _broadcast_getindex_evalf at ./broadcast.jl:648 [inlined]
+     [2] _broadcast_getindex at ./broadcast.jl:621 [inlined]
+     [3] getindex at ./broadcast.jl:575 [inlined]
+     [4] copy at ./broadcast.jl:876 [inlined]
+     [5] materialize(::Base.Broadcast.Broadcasted{Base.Broadcast.DefaultArrayStyle{1},Nothing,typeof(&),Tuple{Base.RefValue{String},Array{Int64,1}}}) at ./broadcast.jl:837
+     [6] top-level scope at REPL[45]:1
+    ```
+02. Unlike `pandas`, one seems to have to always specify the columns:
+    ```julia
+    julia> df[(df[:Names] .== "A") .& (df[:B] .> 4)]
+    ERROR: BoundsError: attempt to access data frame with 3 columns
+      at index [false, false, true, false, false, false, true, false, false, true]
+    Stacktrace:
+     [1] getindex at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/other/index.jl:234 [inlined]
+     [2] #manipulate#299 at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/abstractdataframe/selection.jl:550 [inlined]
+     [3] #select#296 at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/abstractdataframe/selection.jl:493 [inlined]
+     [4] getindex at /home/phunc20/.julia/packages/DataFrames/GtZ1l/src/dataframe/dataframe.jl:468 [inlined]
+     [5] getindex(::DataFrame, ::BitArray{1}) at ./deprecated.jl:72
+     [6] top-level scope at REPL[38]:1
+    
+    julia> df[(df[:Names] .== "A") .& (df[:B] .> 4), 1]
+    3-element Array{Int64,1}:
+      3
+      7
+     10
+    
+    julia> df[(df[:Names] .== "A") .& (df[:B] .> 4), :]
+    3×3 DataFrame
+    │ Row │ A     │ B     │ Names  │
+    │     │ Int64 │ Int64 │ String │
+    ├─────┼───────┼───────┼────────┤
+    │ 1   │ 3     │ 6     │ A      │
+    │ 2   │ 7     │ 14    │ A      │
+    │ 3   │ 10    │ 20    │ A      │
+    
+    ```
