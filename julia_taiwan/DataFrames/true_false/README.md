@@ -1,30 +1,29 @@
 # Origin
 The original question asked by user 黃逸華 was as follows.
-
-> ```請問一個 DataFrames 的問題（v1.6）
-  using Pkg
-  using DataFrames
-  df = DataFrame(A=1:10, B=2:2:20)
-  df[:,:Names] = ["A","A","A","B","C","B", "A","B","C","A"]
-  //條件A
-  df[(df[:, :Names] .== "A"), :]
-  //條件B
-  df[(df[:, :B] .>4), :]
-  //兩個條件組合就報錯
-  df[(df[:, :Names] .== "A") & (df[:, :B] .>4), :]
-  ---
-  julia> df[(df[:, :Names] .== "A") & (df[:, :B] .>4), :]
-  ERROR: MethodError: no method matching &(::BitVector, ::BitVector)     
-  Closest candidates are:
-   &(::Any, ::Any, ::Any, ::Any...) at operators.jl:560
-  Stacktrace:
-   [1] top-level scope
-     @ REPL[69]:1
-  請問何解？
-  另，
-  我按照YouTube /stackoverflow 的範例更是錯
-  df[df[:Names] .=="A",:]
-  ```
+```
+請問一個 DataFrames 的問題（v1.6）
+using Pkg
+using DataFrames
+df = DataFrame(A=1:10, B=2:2:20)
+df[:,:Names] = ["A","A","A","B","C","B", "A","B","C","A"]
+//條件A
+df[(df[:, :Names] .== "A"), :]
+//條件B
+df[(df[:, :B] .>4), :]
+//兩個條件組合就報錯
+df[(df[:, :Names] .== "A") & (df[:, :B] .>4), :]
+julia> df[(df[:, :Names] .== "A") & (df[:, :B] .>4), :]
+ERROR: MethodError: no method matching &(::BitVector, ::BitVector)     
+Closest candidates are:
+ &(::Any, ::Any, ::Any, ::Any...) at operators.jl:560
+Stacktrace:
+ [1] top-level scope
+   @ REPL[69]:1
+請問何解？
+另，
+我按照YouTube /stackoverflow 的範例更是錯
+df[df[:Names] .=="A",:]
+```
 
 
 And a solution by using **`.&`** was immediately proposed
